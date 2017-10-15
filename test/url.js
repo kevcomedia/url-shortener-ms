@@ -2,7 +2,11 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const mongoose = require('mongoose');
 const app = require('../app');
+
+const testDb = 'test_urlShortener';
+const testDbUri = `mongodb://localhost/${testDb}`;
 
 chai.should();
 chai.use(chaiHttp);
@@ -10,16 +14,22 @@ chai.use(chaiHttp);
 let server;
 
 before(function startServer(done) {
-  server = app.listen(8888, done);
+  mongoose.Promise = global.Promise;
+
+  mongoose.connect(testDbUri, {useMongoClient: true});
+  mongoose.connection
+      .once('open', () => server = app.listen(8888, done))
+      .on('error', done);
 });
 
 afterEach(function dropTestCollection(done) {
-  // TODO drop test collection
-  done();
+  mongoose.connection.dropDatabase(testDb, done);
 });
 
 after(function killServer(done) {
-  server.close(done);
+  server.close(function() {
+    mongoose.connection.close(done);
+  });
 });
 
 describe('URL Shortener', () => {
