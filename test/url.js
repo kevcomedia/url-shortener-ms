@@ -3,6 +3,8 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
+
+const Url = require('../models/url');
 const app = require('../app');
 
 const testDb = 'test_urlShortener';
@@ -83,6 +85,24 @@ describe('URL Shortener', () => {
             res.should.have.status(200);
             res.body.should.have.all.own.keys('url', 'shortened');
             done();
+          });
+    });
+
+    it('should store the URL and its shortened version in the database', (done) => {
+      const urlToShorten = 'http://example.com';
+      chai.request(server)
+          .get('/new/' + urlToShorten)
+          .end((err, res) => {
+            if (err) done(err);
+
+            res.should.have.status(200);
+
+            Url.findOne({url: urlToShorten}, (err, doc) => {
+              const {url, shortened} = res.body;
+              doc.should.have.property('url').that.equals(url);
+              doc.should.have.property('shortened').that.equals(shortened);
+              done();
+            });
           });
     });
 
