@@ -28,7 +28,7 @@ app.get(/^\/new\/(https?:\/\/.+)/, function(req, res) {
 
               const url = new Url({
                 original: urlToShorten,
-                shortened,
+                shortened: `${req.protocol}://${req.hostname}/${shortened}`,
               });
               return url.save();
             });

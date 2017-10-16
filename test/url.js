@@ -138,5 +138,18 @@ describe('URL Shortener', () => {
                 });
           });
     });
+
+    it('should display a full URL in the shortened field', (done) => {
+      chai.request(server)
+          .get('/new/http://example.com')
+          .end((err, res) => {
+            if (err) done(err);
+
+            res.should.have.status(200);
+            res.body.should.have.property('shortened')
+                .that.matches(/^https?:\/\/.+?\/[A-Za-z0-9]{7}/);
+            done();
+          });
+    });
   });
 });
