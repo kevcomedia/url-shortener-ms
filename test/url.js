@@ -88,6 +88,7 @@ describe('URL Shortener', () => {
           });
     });
 
+    // eslint-disable-next-line max-len
     it('should store the URL and its shortened version in the database', (done) => {
       const urlToShorten = 'http://example.com';
       chai.request(server)
@@ -119,6 +120,7 @@ describe('URL Shortener', () => {
           });
     });
 
+    // eslint-disable-next-line max-len
     it('should reuse the shortened URL if URL is entered more than once', (done) => {
       chai.request(server)
           .get('/new/http://example.com')
