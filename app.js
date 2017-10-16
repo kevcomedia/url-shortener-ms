@@ -1,4 +1,6 @@
 const express = require('express');
+const randomstring = require('randomstring');
+
 const app = express();
 
 const Url = require('./models/url');
@@ -14,11 +16,22 @@ app.get(/^\/new\/(https?:\/\/.+)/, function(req, res) {
       .then(function(doc) {
         if (doc) return Promise.resolve(doc);
 
-        const url = new Url({
-          url: urlToShorten,
-          shortened: '' + (Math.random()), // TODO assign proper value
-        });
-        return url.save();
+        return Url.find({}, {shortened: true})
+            .then(function(docs) {
+              const shortenedSet = new Set(docs.map((doc) => doc.shortened));
+
+              let shortened = '';
+              while (true) {
+                shortened = randomstring.generate({length: 7});
+                if (!shortenedSet.has(shortened)) break;
+              }
+
+              const url = new Url({
+                url: urlToShorten,
+                shortened,
+              });
+              return url.save();
+            });
       })
       .then(function({url, shortened}) {
         return res.send({url, shortened});
