@@ -1,6 +1,15 @@
 const Url = require('../../models/url');
 const {generateUniqueId} = require('../../utils/utils');
 
+function createUrl(urlToShorten, knownIds, {protocol, hostname} = {}) {
+  const shortened = generateUniqueId(knownIds);
+  const url = new Url({
+    original: urlToShorten,
+    shortened: `${protocol}://${hostname}/${shortened}`,
+  });
+  return url.save();
+}
+
 function saveUrl(req, res) {
   const urlToShorten = req.params[0]
 
@@ -11,13 +20,7 @@ function saveUrl(req, res) {
         return Url.find({}, {shortened: true})
             .then(function(docs) {
               const shortenedSet = new Set(docs.map((doc) => doc.shortened));
-
-              const shortened = generateUniqueId(shortenedSet);
-              const url = new Url({
-                original: urlToShorten,
-                shortened: `${req.protocol}://${req.hostname}/${shortened}`,
-              });
-              return url.save();
+              return createUrl(urlToShorten, shortenedSet, req);
             });
       })
       .then(function({original, shortened}) {
