@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const urlSchema = new Schema({
-  url: {
+  original: {
     type: String,
     required: true,
     match: /^https?:\/\/.+/,

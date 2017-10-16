@@ -43,7 +43,7 @@ describe('URL Shortener', () => {
             if (err) done(err);
 
             res.should.have.status(200);
-            res.body.should.have.property('url')
+            res.body.should.have.property('original')
                 .that.equals('http://example.com');
             done();
           });
@@ -56,7 +56,7 @@ describe('URL Shortener', () => {
             if (err) done(err);
 
             res.should.have.status(200);
-            res.body.should.have.property('url')
+            res.body.should.have.property('original')
                 .that.equals('https://example.com');
             done();
           });
@@ -76,14 +76,14 @@ describe('URL Shortener', () => {
   });
 
   describe('Saving URLs', () => {
-    it('should return JSON with `url` and `shortened` keys', (done) => {
+    it('should return JSON with `original` and `shortened` keys', (done) => {
       chai.request(server)
           .get('/new/http://example.com')
           .end((err, res) => {
             if (err) done(err);
 
             res.should.have.status(200);
-            res.body.should.have.all.own.keys('url', 'shortened');
+            res.body.should.have.all.own.keys('original', 'shortened');
             done();
           });
     });
@@ -97,9 +97,9 @@ describe('URL Shortener', () => {
 
             res.should.have.status(200);
 
-            Url.findOne({url: urlToShorten}, (err, doc) => {
-              const {url, shortened} = res.body;
-              doc.should.have.property('url').that.equals(url);
+            Url.findOne({original: urlToShorten}, (err, doc) => {
+              const {original, shortened} = res.body;
+              doc.should.have.property('original').that.equals(original);
               doc.should.have.property('shortened').that.equals(shortened);
               done();
             });
@@ -114,7 +114,7 @@ describe('URL Shortener', () => {
             if (err) done(err);
 
             res.should.have.status(200);
-            res.body.should.have.property('url').that.equals(url);
+            res.body.should.have.property('original').that.equals(url);
             done();
           });
     });

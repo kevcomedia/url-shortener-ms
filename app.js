@@ -12,7 +12,7 @@ app.get('/', function(req, res) {
 app.get(/^\/new\/(https?:\/\/.+)/, function(req, res) {
   const urlToShorten = req.params[0]
 
-  Url.findOne({url: urlToShorten})
+  Url.findOne({original: urlToShorten})
       .then(function(doc) {
         if (doc) return Promise.resolve(doc);
 
@@ -27,14 +27,14 @@ app.get(/^\/new\/(https?:\/\/.+)/, function(req, res) {
               }
 
               const url = new Url({
-                url: urlToShorten,
+                original: urlToShorten,
                 shortened,
               });
               return url.save();
             });
       })
-      .then(function({url, shortened}) {
-        return res.send({url, shortened});
+      .then(function({original, shortened}) {
+        return res.send({original, shortened});
       });
 });
 
