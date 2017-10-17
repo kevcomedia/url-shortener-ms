@@ -1,14 +1,12 @@
 const express = require('express');
 const app = express();
 
-const url = require('./app/routes/url');
+const urlRoutes = require('./app/routes/url');
+
+app.use('/', urlRoutes);
 
 app.get('/', function(req, res) {
   res.send('Hello World');
 });
-
-app.get(/^\/new\/(https?:\/\/.+)/, url.saveUrl);
-
-app.get('/new/:invalid', url.invalidInput);
 
 module.exports = app;
