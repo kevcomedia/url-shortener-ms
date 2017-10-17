@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "8"
+
+services:
+  - mongodb
+
+cache:
+  directories:
+    - "node_modules"
+
+script:
+  - npm test
+  - npm run lint
+
+os:
+  - linux
