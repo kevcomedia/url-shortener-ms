@@ -66,8 +66,6 @@ describe('URL Shortener', () => {
       chai.request(server)
           .get('/new/example.com')
           .end((err, res) => {
-            if (err) done(err);
-
             res.should.have.status(400);
             res.body.should.have.all.own.keys('error');
             done();

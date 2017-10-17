@@ -1,3 +1,6 @@
+const express = require('express');
+const router = express.Router(); // eslint-disable-line new-cap
+
 const Url = require('../../models/url');
 const {generateUniqueId} = require('../../utils/utils');
 
@@ -45,4 +48,17 @@ function saveUrl(req, res) {
       });
 }
 
-module.exports = {saveUrl};
+/**
+ * Responds with an error message for inputs that are not URLs.
+ *
+ * @param {object} req Express request object.
+ * @param {object} res Express response object.
+ */
+function invalidInput(req, res) {
+  res.status(400).send({error: `${req.params.invalid} is not valid`});
+}
+
+router.get(/^\/new\/(https?:\/\/.+)/, saveUrl);
+router.get('/new/:invalid', invalidInput);
+
+module.exports = router;
