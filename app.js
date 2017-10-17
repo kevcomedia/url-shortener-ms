@@ -9,8 +9,6 @@ app.get('/', function(req, res) {
 
 app.get(/^\/new\/(https?:\/\/.+)/, url.saveUrl);
 
-app.get('/new/:invalid', function(req, res) {
-  return res.status(400).send({error: `${req.params.invalid} is not valid`});
-});
+app.get('/new/:invalid', url.invalidInput);
 
 module.exports = app;

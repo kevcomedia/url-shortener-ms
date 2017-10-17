@@ -45,4 +45,14 @@ function saveUrl(req, res) {
       });
 }
 
-module.exports = {saveUrl};
+/**
+ * Responds with an error message for inputs that are not URLs.
+ *
+ * @param {object} req Express request object.
+ * @param {object} res Express response object.
+ */
+function invalidInput(req, res) {
+  res.status(400).send({error: `${req.params.invalid} is not valid`});
+}
+
+module.exports = {saveUrl, invalidInput};
