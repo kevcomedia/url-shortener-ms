@@ -33,15 +33,16 @@ function createUrl(urlToShorten, knownIds, {protocol, hostname} = {}) {
 function saveUrl(req, res) {
   const urlToShorten = req.params[0];
 
-  Url.findOne({original: urlToShorten})
-      .then(function(doc) {
-        if (doc) return Promise.resolve(doc);
+  Url.find({}, {original: 1, shortened: 1, _id: 0})
+      .then(function(docs) {
+        const shortenedSet = new Set(docs.map((doc) => doc.shortened));
+        const storedUrl = docs.find((doc) => doc.original == urlToShorten);
 
-        return Url.find({}, {shortened: true})
-            .then(function(docs) {
-              const shortenedSet = new Set(docs.map((doc) => doc.shortened));
-              return createUrl(urlToShorten, shortenedSet, req);
-            });
+        if (storedUrl) {
+          return Promise.resolve(storedUrl);
+        }
+
+        return createUrl(urlToShorten, shortenedSet, req);
       })
       .then(function({original, shortened}) {
         return res.send({original, shortened});
