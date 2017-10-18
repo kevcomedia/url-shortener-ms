@@ -8,7 +8,7 @@ const {generateUniqueId} = require('../../utils/utils');
  * Creates and saves a Url document to the database.
  *
  * @param {string} urlToShorten The original URL to shorten.
- * @param {object} knownIds A Set of known or used IDs so far.
+ * @param {object} knownIds An array of known or used IDs so far.
  * @param {object} req The request object, whose `protocol` and `hostname`
  * properties are used in the shortened URL.
  *
@@ -33,18 +33,22 @@ function createUrl(urlToShorten, knownIds, {protocol, hostname} = {}) {
 function saveUrl(req, res) {
   const urlToShorten = req.params[0];
 
-  Url.findOne({original: urlToShorten})
-      .then(function(doc) {
-        if (doc) return Promise.resolve(doc);
+  Url.find({}, {original: 1, shortened: 1, _id: 0})
+      .then(function(docs) {
+        const knownIds = docs.map((doc) => doc.shortened);
+        const storedUrl = docs.find((doc) => doc.original == urlToShorten);
 
-        return Url.find({}, {shortened: true})
-            .then(function(docs) {
-              const shortenedSet = new Set(docs.map((doc) => doc.shortened));
-              return createUrl(urlToShorten, shortenedSet, req);
-            });
+        if (storedUrl) {
+          return Promise.resolve(storedUrl);
+        }
+
+        return createUrl(urlToShorten, knownIds, req);
       })
       .then(function({original, shortened}) {
         return res.send({original, shortened});
+      })
+      .catch(function(err) {
+        return res.status(500).send({'500': 'Internal Server Error'});
       });
 }
 
