@@ -8,7 +8,7 @@ const {generateUniqueId} = require('../../utils/utils');
  * Creates and saves a Url document to the database.
  *
  * @param {string} urlToShorten The original URL to shorten.
- * @param {object} knownIds A Set of known or used IDs so far.
+ * @param {object} knownIds An array of known or used IDs so far.
  * @param {object} req The request object, whose `protocol` and `hostname`
  * properties are used in the shortened URL.
  *
@@ -35,14 +35,14 @@ function saveUrl(req, res) {
 
   Url.find({}, {original: 1, shortened: 1, _id: 0})
       .then(function(docs) {
-        const shortenedSet = new Set(docs.map((doc) => doc.shortened));
+        const knownIds = docs.map((doc) => doc.shortened);
         const storedUrl = docs.find((doc) => doc.original == urlToShorten);
 
         if (storedUrl) {
           return Promise.resolve(storedUrl);
         }
 
-        return createUrl(urlToShorten, shortenedSet, req);
+        return createUrl(urlToShorten, knownIds, req);
       })
       .then(function({original, shortened}) {
         return res.send({original, shortened});
