@@ -46,6 +46,9 @@ function saveUrl(req, res) {
       })
       .then(function({original, shortened}) {
         return res.send({original, shortened});
+      })
+      .catch(function(err) {
+        return res.status(500).send({'500': 'Internal Server Error'});
       });
 }
 
