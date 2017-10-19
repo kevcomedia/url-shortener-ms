@@ -62,7 +62,7 @@ function invalidInput(req, res) {
   res.status(400).send({error: `${req.params.invalid} is not valid`});
 }
 
-router.get(/^\/new\/(https?:\/\/.+)/, saveUrl);
-router.get('/new/:invalid', invalidInput);
+router.get(/\/(https?:\/\/.+)/, saveUrl);
+router.get('/:invalid', invalidInput);
 
 module.exports = router;
