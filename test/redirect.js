@@ -51,4 +51,19 @@ describe('URL Redirect', function() {
           done();
         });
   });
+
+  describe('Improper shortened URL length', () => {
+    const invalids = ['abcdefgh', 'abcdef', 'a'];
+
+    invalids.forEach((invalid) => {
+      it('should reject ' + invalid, (done) => {
+        chai.request('localhost:8888').get('/' + invalid)
+            .end((err) => {
+              err.should.not.be.null;
+              err.should.have.status(400);
+              done();
+            });
+      });
+    });
+  });
 });
