@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>freeCodeCamp API Project - URL Shortener</title>
+  <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <h1>URL Shortener Microservice</h1>
+
+      <section class="col-sm-6">
+        <h2>Usage</h2>
+        <p>Type <code>/new/&lt;http://yoururl.com&gt;</code> to get a shortened
+          URL.</p>
+
+        <h2>Examples</h2>
+        <p>Click on a link below. You should see the shortened URL. Visiting
+          that will redirect you to the original URL.</p>
+
+        <ul>
+          <li><a href="/new/https://freecodecamp.org">/new/https://freecodecamp.org</a></li>
+          <li><a href="/new/https://en.wikipedia.org/wiki/Randomness">/new/https://en.wikipedia.org/wiki/Randomness</a></li>
+        </ul>
+      </section>
+
+      <section class="col-sm-6">
+        <h3>Or type your URL in the field below</h3>
+
+        <form id="urlForm">
+          <div class="form-group">
+            <label for="url">Your URL</label>
+            <div class="input-group">
+              <input class="form-control" id="urlForm-url" type="url" placeholder="http://www.example.com">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit">Go!</button>
+              </span>
+            </div>
+          </div>
+        </form>
+
+        <div id="urlResponse"></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="form.js"></script>
+</body>
+</html>
