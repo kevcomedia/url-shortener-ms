@@ -1,6 +1,6 @@
 {
   "name": "url-shortener-ms",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "freeCodeCamp URL shorterner microservice project",
   "main": "index.js",
   "scripts": {
